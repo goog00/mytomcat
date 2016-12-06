@@ -1,11 +1,10 @@
 package ex02.pyrmont;
 
+import ex00.common.Constants;
+
 import javax.servlet.ServletOutputStream;
 import javax.servlet.ServletResponse;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintWriter;
+import java.io.*;
 import java.util.Locale;
 
 /**
@@ -25,10 +24,38 @@ public class Response implements ServletResponse {
         this.request = request;
     }
 
-    public void sendStaticResource() throws IOException{
+    /**
+     * This method is used to serve static pages
+     * @throws IOException
+     */
+    public void sendStaticResource() throws IOException {
         byte[] bytes = new byte[BUFFER_SIZE];
         FileInputStream fis = null;
-//        File file = new File(Constant)
+        try {
+            File file = new File(Constants.WEB_ROOT,request.getUri());
+            fis = new FileInputStream(file);
+            /**
+             * HTTP Response = Status-line ((general-header | response-header | entity-header) CRLF))
+             */
+            int ch = fis.read(bytes,0,BUFFER_SIZE);
+            while(ch != -1){
+                output.write(bytes,0,ch);
+                ch = fis.read(bytes,0,BUFFER_SIZE);
+            }
+        }catch (Exception e){
+            String errorMessage = "HTTP/1.1 404 File Not Found \r\n"+
+                    "Content-Type:text/html\r\n"+
+                    "Content-Length:23\r\n"+
+                    "\r\n"+
+                    "<h1>File Not Found</h1>";
+        }finally {
+            if(fis != null){
+                fis.close();
+            }
+        }
+
+
+
     }
 
     public String getCharacterEncoding() {
@@ -44,7 +71,8 @@ public class Response implements ServletResponse {
     }
 
     public PrintWriter getWriter() throws IOException {
-        return null;
+        writer = new PrintWriter(output,true);
+        return writer;
     }
 
     public void setCharacterEncoding(String s) {
