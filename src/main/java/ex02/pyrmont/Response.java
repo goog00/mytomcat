@@ -1,7 +1,5 @@
 package ex02.pyrmont;
 
-import ex00.common.Constants;
-
 import javax.servlet.ServletOutputStream;
 import javax.servlet.ServletResponse;
 import java.io.*;
