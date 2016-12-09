@@ -1,5 +1,9 @@
 package ex03.pyrmont.connector.http;
 
+import org.apache.catalina.HttpResponse;
+
+import java.io.IOException;
+import java.io.OutputStream;
 import java.net.Socket;
 
 /**
@@ -15,11 +19,29 @@ public class HttpProcessor {
     private HttpConnector connector;
     private HttpRequest request;
     private HttpRequestLine requestLine = new HttpRequestLine();
+    private HttpResponse response;
 
+    protected String method = null;
+    protected String queryString = null;
 
 
     public void process(Socket socket){
+        SocketInputStream input = null;
+        OutputStream output = null;
 
+        try {
+            input = new SocketInputStream(socket.getInputStream(),2048);
+            output = socket.getOutputStream();
+
+            //create HttpRequest object and parse
+            request = new HttpRequest(input);
+
+            //create HttpResponse object
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 }
