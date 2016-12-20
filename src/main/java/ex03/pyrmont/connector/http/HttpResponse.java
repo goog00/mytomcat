@@ -1,7 +1,7 @@
 package ex03.pyrmont.connector.http;
 
-import org.apache.catalina.connector.ResponseStream;
-import org.apache.catalina.connector.ResponseWriter;
+import ex03.pyrmont.connector.ResponseStream;
+import ex03.pyrmont.connector.ResponseWriter;
 import org.apache.catalina.util.CookieTools;
 
 import javax.servlet.ServletOutputStream;
@@ -425,8 +425,7 @@ public class HttpResponse implements HttpServletResponse{
     public PrintWriter getWriter() throws IOException {
         ResponseStream newStream = new ResponseStream(this);
         newStream.setCommit(false);
-        OutputStreamWriter osr =
-                new OutputStreamWriter(newStream, getCharacterEncoding());
+        OutputStreamWriter osr = new OutputStreamWriter(newStream, getCharacterEncoding());
         writer = new ResponseWriter(osr);
         return writer;
     }

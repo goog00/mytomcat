@@ -4,6 +4,8 @@ import ex03.pyrmont.connector.http.HttpResponse;
 
 import javax.servlet.ReadListener;
 import javax.servlet.ServletInputStream;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.WriteListener;
 import java.io.IOException;
 import java.io.OutputStream;
 
@@ -13,13 +15,23 @@ import java.io.OutputStream;
  * bytes on the underlying stream
  * Created by ST on 2016/12/15.
  */
-public class ResponseStream extends ServletInputStream{
+public class ResponseStream extends ServletOutputStream {
 
     // ----------------------------------------------------------- Constructors
+
+    /**
+     * Construct a servlet output stream associated with the specified Request
+     * @param response
+     */
     public ResponseStream(HttpResponse response){
         super();
-
+        closed = false;
+        commit = false;
+        count = 0;
+        this.response = response;
     }
+
+    //-------------------------------------------------Instance Variables
 
     /**
      * Has this stream been closed?
@@ -32,39 +44,31 @@ public class ResponseStream extends ServletInputStream{
     protected boolean commit = false;
 
     /**
-     * The number of bytes which have already been to this stream
+     * The number length past which we will not write,or -1 if there is no defined content length
      */
     protected int count = 0;
 
     /**
-     * The content length past which we will not write,or -1 if there is
+     * The content length past which we will not write ,or -1 if there is
      * no defined content length
      */
     protected int length = -1;
 
+
     /**
-     * The Response with which this input stream is associated
+     * The Response with which this input stream is associated.
      */
     protected HttpResponse response = null;
 
     /**
-     * The underlying output stream to which we should write data
+     * The underlying output stream to which we should write data.
      */
-    protected OutputStream stream = null;
+    protected  OutputStream stream = null;
+
+    //-----------------------------------------------------Properties
 
 
-    // ------------------------------------------------------------- Properties
-
-
-    public boolean isClosed() {
-        return closed;
-    }
-
-    public void setClosed(boolean closed) {
-        this.closed = closed;
-    }
-
-    public boolean getCommit() {
+    public boolean isCommit() {
         return commit;
     }
 
@@ -72,42 +76,30 @@ public class ResponseStream extends ServletInputStream{
         this.commit = commit;
     }
 
-    public int getCount() {
-        return count;
+    /**
+     * Close this output stream ,causing any buffered data to be flushed and
+     * any further output data to throw an IOException
+     * @throws IOException
+     */
+    public void close()throws IOException{
+        if(closed)
+            throw new IOException("responseStream.close.closed");
+        response.flushBuffer();
+        closed = true;
     }
 
-    public void setCount(int count) {
-        this.count = count;
+    /**
+     * Flush any buffered data for this output stream ,which also causes the response to be committed.
+     *
+     * @throws IOException
+     */
+    public void flush() throws IOException{
+        if(closed)
+            throw new IOException("responseStream.flush.closed");
+           if(commit)
+               response.flushBuffer();
     }
 
-    public int getLength() {
-        return length;
-    }
-
-    public void setLength(int length) {
-        this.length = length;
-    }
-
-    public HttpResponse getResponse() {
-        return response;
-    }
-
-    public void setResponse(HttpResponse response) {
-        this.response = response;
-    }
-
-    public OutputStream getStream() {
-        return stream;
-    }
-
-    public void setStream(OutputStream stream) {
-        this.stream = stream;
-    }
-
-    @Override
-    public boolean isFinished() {
-        return false;
-    }
 
     @Override
     public boolean isReady() {
@@ -115,12 +107,55 @@ public class ResponseStream extends ServletInputStream{
     }
 
     @Override
-    public void setReadListener(ReadListener readListener) {
+    public void setWriteListener(WriteListener writeListener) {
 
     }
 
     @Override
-    public int read() throws IOException {
-        return 0;
+    public void write(int b) throws IOException {
+        if(closed)
+            throw new IOException("responseStream.write.closed");
+        if((length > 0) && count >= length)
+            throw new IOException("responseStream.write.count");
+        response.write(b);
+        count++;
     }
+
+    public void write(byte b[]) throws IOException{
+        write(b,0,b.length);
+    }
+
+    public void write(byte b[],int off,int len) throws IOException{
+        if(closed)
+            throw new IOException("responseStream.write.closed");
+        int actual = len;
+        if(length > 0 && (count + len) >= length){
+            actual = length -count;
+        }
+        response.write(b,off,actual);
+        count += actual;
+        if(actual < len)
+            throw new IOException("responseStream.write.count");
+    }
+
+    // -------------------------------------------------------- Package Methods
+
+    /**
+     * Has this response stream been closed?
+     */
+    boolean closed() {
+        return (this.closed);
+
+    }
+
+
+    /**
+     * Reset the count of bytes written to this stream to zero.
+     */
+    void reset() {
+
+        count = 0;
+
+    }
+
 }

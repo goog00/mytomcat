@@ -92,6 +92,16 @@ final class HttpRequestLine {
 
 
     /**
+     * Test if the value of the header includes the given string
+     * @param str
+     * @return
+     */
+    public int indexOf(String str){
+        return indexOf(str.toCharArray(),str.length());
+    }
+
+
+    /**
      * return the index of a character in the value
      * @param c
      * @param start
@@ -114,6 +124,8 @@ final class HttpRequestLine {
     public boolean equals(Object obj){
         return false;
     }
+
+
 
 
 

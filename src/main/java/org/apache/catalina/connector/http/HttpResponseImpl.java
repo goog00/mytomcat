@@ -3,6 +3,7 @@ package org.apache.catalina.connector.http;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.catalina.connector.HttpResponseBase;
@@ -241,6 +242,14 @@ final class HttpResponseImpl
 
     }
 
+    public Collection<String> getHeaders(String s) {
+        return null;
+    }
+
+
+    public void setCharacterEncoding(String s) {
+
+    }
 
     /**
      * Set the content length (in bytes) for this Response.
@@ -259,6 +268,10 @@ final class HttpResponseImpl
 
         if (responseStream != null)
             responseStream.checkChunking(this);
+
+    }
+
+    public void setContentLengthLong(long l) {
 
     }
 

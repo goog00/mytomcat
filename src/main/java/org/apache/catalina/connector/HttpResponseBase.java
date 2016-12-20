@@ -11,12 +11,7 @@ import java.security.AccessController;
 import java.security.PrivilegedExceptionAction;
 import java.security.PrivilegedActionException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Locale;
-import java.util.TimeZone;
+import java.util.*;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -223,17 +218,23 @@ public class HttpResponseBase
 
     }
 
+    public Collection<String> getHeaders(String s) {
+        return null;
+    }
+
 
     /**
      * Return an array of all the header names set for this response, or
      * a zero-length array if no headers have been set.
      */
-    public String[] getHeaderNames() {
+    public Collection<String> getHeaderNames() {
 
-        synchronized (headers) {
-            String results[] = new String[headers.size()];
-            return ((String[]) headers.keySet().toArray(results));
-        }
+//        synchronized (headers) {
+//            String results[] = new String[headers.size()];
+//            return ((String[]) headers.keySet().toArray(results));
+//        }
+        return null;
+
 
     }
 
@@ -753,6 +754,10 @@ public class HttpResponseBase
     }
 
 
+    public void setCharacterEncoding(String s) {
+
+    }
+
     /**
      * Set the content length (in bytes) for this Response.
      *
@@ -770,6 +775,9 @@ public class HttpResponseBase
 
     }
 
+    public void setContentLengthLong(long l) {
+
+    }
 
 
     /**

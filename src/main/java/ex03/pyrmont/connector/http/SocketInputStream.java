@@ -56,6 +56,8 @@ public class SocketInputStream extends InputStream {
 
 // ----------------------------------------------------------- Constructors
 
+    // -------------------------------------------------------------- Variables
+
     /**
      * Construct a servlet input stream associated with the specified socket input
      * @param is socket input stream
@@ -65,8 +67,6 @@ public class SocketInputStream extends InputStream {
         this.is = is;
         buf = new byte[bufferSize];
     }
-
-    // -------------------------------------------------------------- Variables
     /**
      * the String manager for this package
      */
