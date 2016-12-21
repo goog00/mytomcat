@@ -215,7 +215,7 @@ public class SSIServlet extends HttpServlet {
 
         if (expires != null) {
             res.setDateHeader("Expires", (
-                new Date()).getTime() + expires.longValue() * 1000);
+                new java.util.Date()).getTime() + expires.longValue() * 1000);
         }
 
 	processSSI( req, res, resource );

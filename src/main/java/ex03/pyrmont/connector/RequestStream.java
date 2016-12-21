@@ -1,10 +1,9 @@
 package ex03.pyrmont.connector;
 
+import ex03.pyrmont.connector.http.Constants;
 import ex03.pyrmont.connector.http.HttpRequest;
-import org.apache.catalina.security.Constants;
 import org.apache.catalina.util.StringManager;
 
-import javax.servlet.ReadListener;
 import javax.servlet.ServletInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -123,20 +122,6 @@ public class RequestStream extends ServletInputStream {
         return (actuallyRead);
     }
 
-    @Override
-    public boolean isFinished() {
-        return false;
-    }
-
-    @Override
-    public boolean isReady() {
-        return false;
-    }
-
-    @Override
-    public void setReadListener(ReadListener readListener) {
-
-    }
 
 
 }

@@ -70,12 +70,19 @@ public class SocketInputStream extends InputStream {
     /**
      * the String manager for this package
      */
-    protected static StringManager sm = StringManager.getManager(Constants.Package);
+    protected static StringManager sm = StringManager.getManager(Constants.PACKAGE);
     // ----------------------------------------------------- Instance Variables
 
 
     // --------------------------------------------------------- Public Methods
 
+    /**
+     * Read the request line ,and copies it to the given buffer,This
+     * function is meant to be used during the http request header parsing
+     * Do Not attempt to read the request body using it
+     * @param requestLine
+     * @throws IOException
+     */
     public void readRequestLine(HttpRequestLine requestLine) throws IOException{
 
         //Recycling check
@@ -185,14 +192,15 @@ public class SocketInputStream extends InputStream {
         readCount = 0;
         while (!eol){
             // if the buffer is full,extend it
-            if(readCount >= maxRead){
-                if((2 * maxRead) <= HttpRequestLine.MAX_PROTOCOL_SIZE){
+            if(readCount >= maxRead) {
+                if ((2 * maxRead) <= HttpRequestLine.MAX_PROTOCOL_SIZE) {
                     char[] newBuffer = new char[2 * maxRead];
-                    System.arraycopy(requestLine.protocol,0,newBuffer,0,maxRead);
+                    System.arraycopy(requestLine.protocol, 0, newBuffer, 0, maxRead);
                     maxRead = requestLine.protocol.length;
-                }else{
+                } else {
                     throw new IOException(sm.getString("RequestStream.readline.toolong"));
                 }
+            }
                 //We're ar the end of the internal buffer
                 if(pos >= count){
                     //Copying part (or all) of the internal buffer to the line
@@ -213,9 +221,8 @@ public class SocketInputStream extends InputStream {
                     readCount++;
                 }
                 pos++;
-            }
-            requestLine.protocolEnd = readCount;
         }
+        requestLine.protocolEnd = readCount;
 
     }
 
@@ -385,12 +392,20 @@ public class SocketInputStream extends InputStream {
         header.valueEnd = readCount;
     }
 
+    /**
+     * Read byte
+     * @return
+     * @throws IOException
+     */
     @Override
     public int read() throws IOException {
         if(pos >= count){
             fill();
+            if(pos >= count){
+                return -1;
+            }
         }
-        return 0;
+        return buf[pos++] & 0xff;
     }
 
 

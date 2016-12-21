@@ -45,7 +45,7 @@ public class ServletProcessor {
             HttpRequestFacade requestFacade = new HttpRequestFacade(request);
             HttpResponseFacade responseFacade = new HttpResponseFacade(response);
             servlet.service(requestFacade,responseFacade);
-            response.finishResponse();
+            ((HttpResponse) response).finishResponse();
         } catch (InstantiationException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {

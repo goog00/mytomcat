@@ -197,7 +197,7 @@ public class Strftime {
     /**
      * Change the timezone used to format dates
      *
-     * @see TimeZone#setTimeZone
+     * @see java.util.TimeZone#setTimeZone
      */
     public void setTimeZone( TimeZone timeZone ) {
         simpleDateFormat.setTimeZone( timeZone );

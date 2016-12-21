@@ -227,14 +227,12 @@ public class HttpResponseBase
      * Return an array of all the header names set for this response, or
      * a zero-length array if no headers have been set.
      */
-    public Collection<String> getHeaderNames() {
+    public String[] getHeaderNames() {
 
-//        synchronized (headers) {
-//            String results[] = new String[headers.size()];
-//            return ((String[]) headers.keySet().toArray(results));
-//        }
-        return null;
-
+        synchronized (headers) {
+            String results[] = new String[headers.size()];
+            return ((String[]) headers.keySet().toArray(results));
+        }
 
     }
 

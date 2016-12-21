@@ -117,7 +117,7 @@ public interface Server {
      * @param namingResources The new global naming resources
      */
     public void setGlobalNamingResources
-    (NamingResources globalNamingResources);
+        (NamingResources globalNamingResources);
 
 
     /**

@@ -2,10 +2,7 @@ package ex03.pyrmont.connector;
 
 import ex03.pyrmont.connector.http.HttpResponse;
 
-import javax.servlet.ReadListener;
-import javax.servlet.ServletInputStream;
 import javax.servlet.ServletOutputStream;
-import javax.servlet.WriteListener;
 import java.io.IOException;
 import java.io.OutputStream;
 
@@ -101,15 +98,6 @@ public class ResponseStream extends ServletOutputStream {
     }
 
 
-    @Override
-    public boolean isReady() {
-        return false;
-    }
-
-    @Override
-    public void setWriteListener(WriteListener writeListener) {
-
-    }
 
     @Override
     public void write(int b) throws IOException {

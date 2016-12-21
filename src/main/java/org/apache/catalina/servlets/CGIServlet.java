@@ -581,7 +581,7 @@ public class CGIServlet extends HttpServlet {
      * @exception  ServletException  if a servlet-specific exception occurs
      * @exception  IOException  if a read/write exception occurs
      *
-     * @see HttpServlet
+     * @see javax.servlet.http.HttpServlet
      *
      */
     protected void doPost(HttpServletRequest req, HttpServletResponse res)
@@ -600,7 +600,7 @@ public class CGIServlet extends HttpServlet {
      * @exception  ServletException  if a servlet-specific exception occurs
      * @exception  IOException  if a read/write exception occurs
      *
-     * @see HttpServlet
+     * @see javax.servlet.http.HttpServlet
      *
      */
     protected void doGet(HttpServletRequest req, HttpServletResponse res)
@@ -1501,7 +1501,7 @@ public class CGIServlet extends HttpServlet {
          *
          * @exception IOException if problems during reading/writing occur
          *
-         * @see    Runtime#exec(String command, String[] envp,
+         * @see    java.lang.Runtime#exec(String command, String[] envp,
          *                                File dir)
          */
         protected void run() throws IOException {
@@ -1551,7 +1551,7 @@ public class CGIServlet extends HttpServlet {
                     if ((k.indexOf("=") < 0) && (v.indexOf("=") < 0)) {
                         cmdAndArgs.append(k);
                         cmdAndArgs.append("=");
-                        v = URLEncoder.encode(v);
+                        v = java.net.URLEncoder.encode(v);
                         cmdAndArgs.append(v);
                         cmdAndArgs.append(" ");
                     }

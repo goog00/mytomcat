@@ -86,9 +86,9 @@ import org.apache.naming.ContextBindings;
  * <li>Setting an environment variable named Context.URL_PKG_PREFIXES with 
  * its value including the org.apache.catalina.util.naming package name. 
  * More detail about this can be found in the JNDI documentation : 
- * {@link javax.naming.spi.NamingManager#getURLContext(String, Hashtable)}.</li>
+ * {@link javax.naming.spi.NamingManager#getURLContext(java.lang.String, java.util.Hashtable)}.</li>
  * </ul>
- *
+ * 
  * @author Remy Maucherat
  * @version $Revision: 1.2 $ $Date: 2001/01/25 18:35:35 $
  */

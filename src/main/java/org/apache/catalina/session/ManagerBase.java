@@ -480,7 +480,7 @@ public abstract class ManagerBase implements Manager {
                         // Fall back to the simple case
                         log(sm.getString("managerBase.random", randomClass),
                             e);
-                        this.random = new Random();
+                        this.random = new java.util.Random();
                         this.random.setSeed(seed);
                     }
                     log(sm.getString("managerBase.complete", randomClass));

@@ -6,6 +6,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 /**
+ * 链接器
  * Created by ST on 2016/12/7.
  */
 public class HttpConnector implements Runnable {
@@ -23,7 +24,7 @@ public class HttpConnector implements Runnable {
 
         try {
             serverSocket = new ServerSocket(port,1, InetAddress.getByName("127.0.0.1"));
-
+            System.out.println("启动成功。。。。。。。。。");
         } catch (IOException e) {
             e.printStackTrace();
             System.exit(1);
@@ -39,7 +40,7 @@ public class HttpConnector implements Runnable {
             }
             //Hand this socket off to an HttpProcessor
             HttpProcessor processor = new HttpProcessor(this);
-            processor.process(socket);
+            processor.process(socket);//核心处理
 
         }
     }

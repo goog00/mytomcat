@@ -26,15 +26,15 @@ public class HttpProcessor {
     private HttpRequest request;
     private HttpRequestLine requestLine = new HttpRequestLine();
     private HttpResponse response;
-
     protected String method = null;
     protected String queryString = null;
+
 
 
     /**
      * The string manager for this package
      */
-    protected StringManager sm = StringManager.getManager("ex03.pyrmont.connector.http");
+    protected StringManager sm = StringManager.getManager("ex03");
     public void process(Socket socket){
         SocketInputStream input = null;
         OutputStream output = null;

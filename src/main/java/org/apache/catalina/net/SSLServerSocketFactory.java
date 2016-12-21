@@ -105,7 +105,7 @@ import com.sun.net.ssl.SSLContext;
  */
 
 public class SSLServerSocketFactory
-    implements ServerSocketFactory {
+    implements org.apache.catalina.net.ServerSocketFactory {
 
 
     // ----------------------------------------------------- Instance Variables

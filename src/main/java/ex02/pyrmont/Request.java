@@ -181,13 +181,6 @@ public class Request implements ServletRequest {
         return null;
     }
 
-    public AsyncContext startAsync() throws IllegalStateException {
-        return null;
-    }
-
-    public AsyncContext startAsync(ServletRequest servletRequest, ServletResponse servletResponse) throws IllegalStateException {
-        return null;
-    }
 
     public boolean isAsyncStarted() {
         return false;
@@ -197,11 +190,4 @@ public class Request implements ServletRequest {
         return false;
     }
 
-    public AsyncContext getAsyncContext() {
-        return null;
-    }
-
-    public DispatcherType getDispatcherType() {
-        return null;
-    }
 }

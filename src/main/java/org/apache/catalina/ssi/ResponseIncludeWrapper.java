@@ -118,9 +118,9 @@ public class ResponseIncludeWrapper extends HttpServletResponseWrapper {
      * OutputStream already been returned.
      *
      * @return a PrintWriter object
-     * @exception IOException if the outputstream already been called
+     * @exception java.io.IOException if the outputstream already been called
      */
-    public PrintWriter getWriter() throws IOException {
+    public PrintWriter getWriter() throws java.io.IOException {
         if ( servletOutputStream == null ) {
 	    if ( printWriter == null ) {
 		printWriter = new PrintWriter( originalServletOutputStream );
@@ -135,9 +135,9 @@ public class ResponseIncludeWrapper extends HttpServletResponseWrapper {
      * printwriter already been returned.
      *
      * @return a OutputStream object
-     * @exception IOException if the printwriter already been called
+     * @exception java.io.IOException if the printwriter already been called
      */
-    public ServletOutputStream getOutputStream() throws IOException {
+    public ServletOutputStream getOutputStream() throws java.io.IOException {
         if ( printWriter == null ) {
 	    if ( servletOutputStream == null ) {
 		servletOutputStream = originalServletOutputStream;

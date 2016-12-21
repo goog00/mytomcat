@@ -265,7 +265,7 @@ public class HttpResponse implements HttpServletResponse{
         byte[] bytes = new byte[BUFFER_SIZE];
         FileInputStream fis = null;
         try {
-            File file = new File(Constants.WWEB_ROOT, request.getRequestURI());
+            File file = new File(Constants.WEB_ROOT, request.getRequestURI());
             fis = new FileInputStream(file);
             int ch = fis.read(bytes, 0, BUFFER_SIZE);
             while (ch != -1) {

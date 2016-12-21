@@ -310,7 +310,7 @@ public class HttpRequest implements HttpServletRequest{
     }
 
     public String getMethod() {
-        return null;
+        return method;
     }
 
     public String getPathInfo() {
@@ -326,7 +326,7 @@ public class HttpRequest implements HttpServletRequest{
     }
 
     public String getQueryString() {
-        return null;
+        return queryString;
     }
 
     public String getRemoteUser() {
@@ -346,7 +346,7 @@ public class HttpRequest implements HttpServletRequest{
     }
 
     public String getRequestURI() {
-        return null;
+        return requestURI;
     }
 
     public StringBuffer getRequestURL() {
@@ -389,25 +389,8 @@ public class HttpRequest implements HttpServletRequest{
         return false;
     }
 
-    public void login(String s, String s1) throws ServletException {
 
-    }
 
-    public void logout() throws ServletException {
-
-    }
-
-    public Collection<Part> getParts() throws IOException, ServletException {
-        return null;
-    }
-
-    public Part getPart(String s) throws IOException, ServletException {
-        return null;
-    }
-
-    public <T extends HttpUpgradeHandler> T upgrade(Class<T> aClass) throws IOException, ServletException {
-        return null;
-    }
 
     public Object getAttribute(String s) {
         return null;
@@ -458,7 +441,7 @@ public class HttpRequest implements HttpServletRequest{
     }
 
     public String getProtocol() {
-        return null;
+        return protocol;
     }
 
     public String getScheme() {
@@ -466,15 +449,15 @@ public class HttpRequest implements HttpServletRequest{
     }
 
     public String getServerName() {
-        return null;
+        return serverName;
     }
 
     public int getServerPort() {
-        return 0;
+        return serverPort;
     }
 
     public BufferedReader getReader() throws IOException {
-        return null;
+        return reader;
     }
 
     public String getRemoteAddr() {
@@ -533,14 +516,6 @@ public class HttpRequest implements HttpServletRequest{
         return null;
     }
 
-    public AsyncContext startAsync() throws IllegalStateException {
-        return null;
-    }
-
-    public AsyncContext startAsync(ServletRequest servletRequest, ServletResponse servletResponse) throws IllegalStateException {
-        return null;
-    }
-
     public boolean isAsyncStarted() {
         return false;
     }
@@ -549,11 +524,4 @@ public class HttpRequest implements HttpServletRequest{
         return false;
     }
 
-    public AsyncContext getAsyncContext() {
-        return null;
-    }
-
-    public DispatcherType getDispatcherType() {
-        return null;
-    }
 }

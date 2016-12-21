@@ -2,7 +2,6 @@ package ex03.pyrmont.connector.http;
 
 import org.apache.catalina.util.StringManager;
 
-import javax.servlet.ReadListener;
 import javax.servlet.ServletInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -42,7 +41,7 @@ public class RequestStream extends ServletInputStream{
     /**
      * The localized strings for this package
      */
-    protected static StringManager sm = StringManager.getManager(Constants.Package);
+    protected static StringManager sm = StringManager.getManager(Constants.PACKAGE);
 
 
     // the underlying input stream from which we should read data
@@ -115,18 +114,4 @@ public class RequestStream extends ServletInputStream{
     }
 
 
-    @Override
-    public boolean isFinished() {
-        return false;
-    }
-
-    @Override
-    public boolean isReady() {
-        return false;
-    }
-
-    @Override
-    public void setReadListener(ReadListener readListener) {
-
-    }
 }

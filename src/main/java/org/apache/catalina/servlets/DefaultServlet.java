@@ -766,7 +766,7 @@ public class DefaultServlet
      * Get the ETag associated with a file.
      *
      * @param resourceInfo File object
-     *   True if we want a strong ETag, in which case a checksum
+     * @param strong True if we want a strong ETag, in which case a checksum
      * of the file has to be calculated
      */
     protected String getETag(ResourceInfo resourceInfo) {

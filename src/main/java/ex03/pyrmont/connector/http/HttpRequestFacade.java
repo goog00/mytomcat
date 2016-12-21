@@ -6,7 +6,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.Principal;
-import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Locale;
 import java.util.Map;
@@ -138,17 +137,6 @@ public class HttpRequestFacade implements HttpServletRequest {
 
     }
 
-    public Collection<Part> getParts() throws IOException, ServletException {
-        return request.getParts();
-    }
-
-    public Part getPart(String s) throws IOException, ServletException {
-        return request.getPart(s);
-    }
-
-    public <T extends HttpUpgradeHandler> T upgrade(Class<T> aClass) throws IOException, ServletException {
-        return request.upgrade(aClass);
-    }
 
     public Object getAttribute(String name) {
         return request.getAttribute(name);
@@ -254,33 +242,6 @@ public class HttpRequestFacade implements HttpServletRequest {
         return request.getRealPath(s);
     }
 
-    public int getRemotePort() {
-        return request.getRemotePort();
-    }
-
-    public String getLocalName() {
-        return request.getLocalName();
-    }
-
-    public String getLocalAddr() {
-        return request.getLocalAddr();
-    }
-
-    public int getLocalPort() {
-        return request.getLocalPort();
-    }
-
-    public ServletContext getServletContext() {
-        return request.getServletContext();
-    }
-
-    public AsyncContext startAsync() throws IllegalStateException {
-        return request.getAsyncContext();
-    }
-
-    public AsyncContext startAsync(ServletRequest servletRequest, ServletResponse servletResponse) throws IllegalStateException {
-        return null;
-    }
 
     public boolean isAsyncStarted() {
         return false;
@@ -290,11 +251,4 @@ public class HttpRequestFacade implements HttpServletRequest {
         return false;
     }
 
-    public AsyncContext getAsyncContext() {
-        return request.getAsyncContext();
-    }
-
-    public DispatcherType getDispatcherType() {
-        return request.getDispatcherType();
-    }
 }
