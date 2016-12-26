@@ -367,7 +367,7 @@ final class HttpProcessor
 
 
     /**
-     * Parse the value of an <code>Accept-Language</code> header, and add
+     * Parse the value of an <code>Accept-Language</code> header, and add3
      * the corresponding Locales to the current request.
      *
      * @param value The value of the <code>Accept-Language</code> header.

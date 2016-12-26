@@ -6,7 +6,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 /**
- * 链接器
+ * 连接器
  * Created by ST on 2016/12/7.
  */
 public class HttpConnector implements Runnable {
