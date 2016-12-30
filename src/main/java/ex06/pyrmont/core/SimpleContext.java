@@ -1,8 +1,9 @@
-package ex05.pyrmont.core;
+package ex06.pyrmont.core;
 
 import org.apache.catalina.*;
 import org.apache.catalina.deploy.*;
 import org.apache.catalina.util.CharsetMapper;
+import org.apache.catalina.util.LifecycleSupport;
 
 import javax.naming.directory.DirContext;
 import javax.servlet.ServletContext;
@@ -14,7 +15,7 @@ import java.util.HashMap;
 /**
  * Created by ST on 2016/12/26.
  */
-public class SimpleContext implements Context,Pipeline {
+public class SimpleContext implements Context,Pipeline,Lifecycle{
 
     public SimpleContext(){
         //设置基础阀
@@ -23,12 +24,14 @@ public class SimpleContext implements Context,Pipeline {
 
     protected HashMap children = new HashMap();
     protected Loader loader = null;
+    protected LifecycleSupport lifecycle = new LifecycleSupport(this);
     protected SimplePipeline pipeline = new SimplePipeline(this);
     protected HashMap servletMappings = new HashMap();
     protected Mapper mapper = null;
     protected HashMap mappers = new HashMap();
     private Container parent = null;
     private Logger logger = null;
+    protected boolean started = false;
 
 
 
@@ -722,6 +725,87 @@ public class SimpleContext implements Context,Pipeline {
     }
 
     public void removePropertyChangeListener(PropertyChangeListener listener) {
+
+    }
+
+    //implementation of the Lifecycle interface's methods
+    public void addLifecycleListener(LifecycleListener listener) {
+        lifecycle.addLifecycleListener(listener);
+    }
+
+    public LifecycleListener[] findLifecycleListeners() {
+        return null;
+    }
+
+    public void removeLifecycleListener(LifecycleListener listener) {
+        lifecycle.removeLifecycleListener(listener);
+    }
+
+    public void start() throws LifecycleException {
+        if(started)
+            throw new LifecycleException("SimpleContext has already started");
+
+        //Notify our interested lifecycleListeners
+        lifecycle.fireLifecycleEvent(BEFORE_START_EVENT,null);
+        started = true;
+
+        try{
+            //Start our subordinate components ,if any
+            if((loader != null) && loader instanceof Lifecycle){
+                ((Lifecycle)loader).start();
+            }
+            //start out child containers,if any
+            Container children[] = findChildren();
+            for(int i = 0; i < children.length; i++){
+                if(children[i] instanceof Lifecycle){
+                    ((Lifecycle)children[i]).start();
+                }
+            }
+
+            //start the values in our pipeline (including the basic) ,if any
+            if(pipeline instanceof Lifecycle){
+                ((Lifecycle)pipeline).start();
+            }
+            //Notify our interested LifecycleListeners
+            lifecycle.fireLifecycleEvent(START_EVENT,null);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        //Notify our interested LifecycleListeners
+        lifecycle.fireLifecycleEvent(AFTER_START_EVENT,null);
+
+    }
+
+    public void stop() throws LifecycleException {
+        if(!started){
+            throw new LifecycleException("SimpleContext has not been started");
+        }
+        //Notify our interested LifecycleListeners
+        lifecycle.fireLifecycleEvent(BEFORE_STOP_EVENT,null);
+        lifecycle.fireLifecycleEvent(STOP_EVENT,null);
+        started = false;
+
+        try{
+            //stop the Valves in our pipeline (including the basic ),if any
+            if(pipeline instanceof Lifecycle){
+                ((Lifecycle)pipeline).stop();
+            }
+
+            //stop our child containers ,if any
+            Container children[] = findChildren();
+            for(int i = 0; i < children.length; i++){
+                if(children[i] instanceof Lifecycle){
+                    ((Lifecycle)children[i]).stop();
+                }
+            }
+            if(loader != null && loader instanceof Lifecycle){
+                ((Lifecycle)loader).stop();
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        //Notify our interested LifecycleListeners
+        lifecycle.fireLifecycleEvent(AFTER_STOP_EVENT,null);
 
     }
 }

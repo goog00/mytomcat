@@ -1,4 +1,4 @@
-package ex05.pyrmont.core;
+package ex06.pyrmont.core;
 
 import org.apache.catalina.*;
 
@@ -8,7 +8,7 @@ import java.io.IOException;
 /**
  * Created by ST on 2016/12/26.
  */
-public class SimplePipeline implements Pipeline{
+public class SimplePipeline implements Pipeline,Lifecycle{
     //设置容器
     public SimplePipeline(Container container){
         setContainer(container);
@@ -58,6 +58,27 @@ public class SimplePipeline implements Pipeline{
     }
 
     public void removeValve(Valve valve) {
+
+    }
+
+    //implementation of the Lifecycle's method
+    public void addLifecycleListener(LifecycleListener listener) {
+
+    }
+
+    public LifecycleListener[] findLifecycleListeners() {
+        return new LifecycleListener[0];
+    }
+
+    public void removeLifecycleListener(LifecycleListener listener) {
+
+    }
+
+    public void start() throws LifecycleException {
+
+    }
+
+    public void stop() throws LifecycleException {
 
     }
 

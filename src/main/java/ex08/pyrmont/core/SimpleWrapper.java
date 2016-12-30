@@ -1,6 +1,7 @@
-package ex05.pyrmont.core;
+package ex08.pyrmont.core;
 
 import org.apache.catalina.*;
+import org.apache.catalina.util.LifecycleSupport;
 
 import javax.naming.directory.DirContext;
 import javax.servlet.Servlet;
@@ -10,21 +11,44 @@ import java.beans.PropertyChangeListener;
 import java.io.IOException;
 
 /**
- * Created by ST on 2016/12/26.
+ * Created by ST on 2016/12/29.
  */
-public class SimpleWrapper implements Wrapper,Pipeline {
+public class SimpleWrapper implements Wrapper,Pipeline,Lifecycle{
 
+    public SimpleWrapper(){
+
+    }
     //the servlet instance
     private Servlet instance = null;
     private String servletClass;
     private Loader loader;
     private String name;
+    protected LifecycleSupport lifecycle = new LifecycleSupport(this);
     private SimplePipeline pipeline = new SimplePipeline(this);
-    private Container parent = null;
+    protected Container parent = null;
+    protected boolean started = false;
 
-    public SimpleWrapper(){
-        pipeline.setBasic(new SimpleWrapperValve());
+
+    public void addLifecycleListener(LifecycleListener listener) {
+
     }
+
+    public LifecycleListener[] findLifecycleListeners() {
+        return new LifecycleListener[0];
+    }
+
+    public void removeLifecycleListener(LifecycleListener listener) {
+
+    }
+
+    public void start() throws LifecycleException {
+
+    }
+
+    public void stop() throws LifecycleException {
+
+    }
+
     public Valve getBasic() {
         return null;
     }
@@ -82,7 +106,7 @@ public class SimpleWrapper implements Wrapper,Pipeline {
     }
 
     public void setServletClass(String servletClass) {
-            this.servletClass = servletClass;
+        this.servletClass = servletClass;
     }
 
     public boolean isUnavailable() {
@@ -104,57 +128,59 @@ public class SimpleWrapper implements Wrapper,Pipeline {
     public Servlet allocate() throws ServletException {
         //Load and initialize our instance if necessary
         if(instance == null){
-            try {
+            try{
                 instance = loadServlet();
-            }
-            catch (ServletException e) {
+            } catch (ServletException e){
                 throw e;
-            }catch (Throwable e){
+            } catch (Throwable e){
                 throw new ServletException("Cannot allocate a servlet instance ",e);
             }
+
         }
         return instance;
     }
-    private Servlet loadServlet() throws ServletException{
+
+    public Servlet loadServlet() throws ServletException{
         if(instance != null){
             return instance;
         }
         Servlet servlet = null;
         String actualClass = servletClass;
         if(actualClass == null){
-            throw new ServletException("servlet class has not been specified");
+            throw new ServletException("Servlet class has not been specified");
         }
         Loader loader = getLoader();
         //Acquire an instance of the class loader to be used
         if(loader == null){
             throw new ServletException("No loader");
         }
-
         ClassLoader classLoader = loader.getClassLoader();
 
         //Load the specified servlet class from the appropriate class loader
         Class classClass = null;
-
-        try {
-            if(classLoader != null) {
+        try{
+            if(classLoader != null){
                 classClass = classLoader.loadClass(actualClass);
             }
-        } catch (ClassNotFoundException e) {
+        }catch (ClassNotFoundException e){
             throw new ServletException("Servlet class not found");
         }
+
+        //Instantiate and initialize an instance of the servlet class itself
         try {
             servlet = (Servlet) classClass.newInstance();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
+        } catch (Throwable e) {
             e.printStackTrace();
         }
+
+        //Call the initialization method of this servlet
         try{
             servlet.init(null);
-        }catch (Throwable f){
-            throw new ServletException("Failed initialize servlet");
+        }catch (Throwable e){
+            e.printStackTrace();
         }
         return servlet;
+
     }
 
     public void deallocate(Servlet servlet) throws ServletException {
@@ -178,7 +204,7 @@ public class SimpleWrapper implements Wrapper,Pipeline {
     }
 
     public void load() throws ServletException {
-        instance = loadServlet();
+
     }
 
     public void removeInitParameter(String name) {
@@ -206,8 +232,9 @@ public class SimpleWrapper implements Wrapper,Pipeline {
     }
 
     public Loader getLoader() {
-        if(loader != null)
-            return (loader);
+        if(loader != null){
+            return loader;
+        }
         if(parent != null){
             return parent.getLoader();
         }
@@ -243,13 +270,20 @@ public class SimpleWrapper implements Wrapper,Pipeline {
     }
 
     public String getName() {
-        return name;
+        return null;
     }
 
     public void setName(String name) {
-        this.name = name;
+
     }
 
+    public Container getParent() {
+        return null;
+    }
+
+    public void setParent(Container container) {
+
+    }
 
     public ClassLoader getParentClassLoader() {
         return null;
@@ -266,13 +300,7 @@ public class SimpleWrapper implements Wrapper,Pipeline {
     public void setRealm(Realm realm) {
 
     }
-    public Container getParent() {
-        return parent;
-    }
 
-    public void setParent(Container container) {
-        parent = container;
-    }
     public DirContext getResources() {
         return null;
     }
@@ -318,7 +346,7 @@ public class SimpleWrapper implements Wrapper,Pipeline {
     }
 
     public void invoke(Request request, Response response) throws IOException, ServletException {
-            pipeline.invoke(request,response);
+
     }
 
     public Container map(Request request, boolean update) {

@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.TreeMap;
+import java.util.logging.Level;
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -984,6 +985,7 @@ final class HttpProcessor
                 ok = false;
             } catch (Throwable e) {
                 log("process.invoke", e);
+                e.printStackTrace();
                 try {
                     ((HttpServletResponse) response.getResponse()).sendError
                         (HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
