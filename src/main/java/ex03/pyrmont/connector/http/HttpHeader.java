@@ -27,6 +27,7 @@ final class HttpHeader {
     }
 
     // ----------------------------------------------------- Instance Variables
+
     public char[] name;
     public int nameEnd;
     public char[] value;

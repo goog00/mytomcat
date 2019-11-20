@@ -58,6 +58,7 @@ public class Bootstrap2 {
         //将servlet配置到容器中（类似在web.xml中配置的servlet，读取到容器中去）
         context.addServletMapping("/Primitive","Primitive");
         context.addServletMapping("/Modern","Modern");
+
         // ------ add logger --------
         System.setProperty("catalina.base", System.getProperty("user.dir"));
         FileLogger logger = new FileLogger();

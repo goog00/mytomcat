@@ -10,7 +10,7 @@ import java.beans.PropertyChangeListener;
 import java.io.IOException;
 
 /**
- * Created by ST on 2016/12/26.
+ * @author  by ST on 2016/12/26.
  */
 public class SimpleWrapper implements Wrapper, Pipeline {
 
@@ -18,12 +18,15 @@ public class SimpleWrapper implements Wrapper, Pipeline {
      * the servlet instance
      */
     private Servlet instance = null;
+
     private String servletClass;
     /**
      * 载入servlet类要使用的载入器
      */
     private Loader loader;
+
     private String name;
+
     private SimplePipeline pipeline = new SimplePipeline(this);
 
     /**
@@ -33,6 +36,11 @@ public class SimpleWrapper implements Wrapper, Pipeline {
 
     public SimpleWrapper() {
         pipeline.setBasic(new SimpleWrapperValve());
+    }
+
+
+    public void invoke(Request request, Response response) throws IOException, ServletException {
+        pipeline.invoke(request, response);
     }
 
 
@@ -336,9 +344,6 @@ public class SimpleWrapper implements Wrapper, Pipeline {
         return new Mapper[0];
     }
 
-    public void invoke(Request request, Response response) throws IOException, ServletException {
-        pipeline.invoke(request, response);
-    }
 
     public Container map(Request request, boolean update) {
         return null;

@@ -971,8 +971,9 @@ final class HttpProcessor
                     ("Date", FastHttpDateFormat.getCurrentDate());
                 if (ok) {
                     //调用连接器关联的容器的invoke方法
+                    System.out.println("## 调用开始");
                     connector.getContainer().invoke(request, response);
-                    System.out.println("调用结束");
+                    System.out.println("## 调用结束");
                 }
             } catch (ServletException e) {
                 log("process.invoke", e);
