@@ -1,6 +1,5 @@
 package ex08.pyrmont.startup;
 
-import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 import ex08.pyrmont.core.SimpleContextConfig;
 import ex08.pyrmont.core.SimpleWrapper;
 import org.apache.catalina.*;

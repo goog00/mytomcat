@@ -12,6 +12,7 @@ import java.net.URLClassLoader;
 import java.net.URLStreamHandler;
 
 /**
+ * 自定义类加载器
  * Created by ST on 2016/12/26.
  */
 public class SimpleLoader implements Loader {
@@ -21,13 +22,13 @@ public class SimpleLoader implements Loader {
     ClassLoader classLoader = null;
     Container container = null;
 
-    public SimpleLoader(){
+    public SimpleLoader() {
         URL[] urls = new URL[1];
         URLStreamHandler streamHandler = null;
         File classPath = new File(WEB_ROOT);
         try {
-            String repository = (new URL("file",null,classPath.getCanonicalPath() + File.separator)).toString();
-            urls[0] = new URL(null,repository,streamHandler);
+            String repository = (new URL("file", null, classPath.getCanonicalPath() + File.separator)).toString();
+            urls[0] = new URL(null, repository, streamHandler);
             classLoader = new URLClassLoader(urls);
         } catch (IOException e) {
             e.printStackTrace();

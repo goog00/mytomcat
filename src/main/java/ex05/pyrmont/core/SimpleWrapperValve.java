@@ -11,9 +11,11 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Created by ST on 2016/12/26.
+ * 基础阀，专门用于处理对SimpleWrapper类的请求
+ * @author by ST on 2016/12/26.
  */
-public class SimpleWrapperValve implements Valve,Contained {
+public class SimpleWrapperValve implements Valve, Contained {
+
     protected Container container;
 
     public Container getContainer() {
@@ -34,23 +36,23 @@ public class SimpleWrapperValve implements Valve,Contained {
         ServletResponse sres = response.getResponse();
         Servlet servlet = null;
         HttpServletRequest hreq = null;
-        if(sreq instanceof HttpServletRequest){
+        if (sreq instanceof HttpServletRequest) {
             hreq = (HttpServletRequest) sreq;
         }
         HttpServletResponse hres = null;
-        if(sres instanceof HttpServletResponse){
+        if (sres instanceof HttpServletResponse) {
             hres = (HttpServletResponse) sres;
         }
 
         //Allocate a servlet instance to process this request
-        try{
+        try {
             servlet = wrapper.allocate();
-            if(hres != null && hreq != null){
-                servlet.service(hreq,hres);
+            if (hres != null && hreq != null) {
+                servlet.service(hreq, hres);
             } else {
-                servlet.service(sreq,sres);
+                servlet.service(sreq, sres);
             }
-        }catch (ServletException e){
+        } catch (ServletException e) {
             e.printStackTrace();
         }
 

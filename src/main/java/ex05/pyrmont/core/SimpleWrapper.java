@@ -12,19 +12,98 @@ import java.io.IOException;
 /**
  * Created by ST on 2016/12/26.
  */
-public class SimpleWrapper implements Wrapper,Pipeline {
+public class SimpleWrapper implements Wrapper, Pipeline {
 
-    //the servlet instance
+    /**
+     * the servlet instance
+     */
     private Servlet instance = null;
     private String servletClass;
+    /**
+     * 载入servlet类要使用的载入器
+     */
     private Loader loader;
     private String name;
     private SimplePipeline pipeline = new SimplePipeline(this);
+
+    /**
+     * 父容器
+     */
     private Container parent = null;
 
-    public SimpleWrapper(){
+    public SimpleWrapper() {
         pipeline.setBasic(new SimpleWrapperValve());
     }
+
+
+    public Servlet allocate() throws ServletException {
+        //Load and initialize our instance if necessary
+        if (instance == null) {
+            try {
+                instance = loadServlet();
+            } catch (ServletException e) {
+                throw e;
+            } catch (Throwable e) {
+                throw new ServletException("Cannot allocate a servlet instance ", e);
+            }
+        }
+        return instance;
+    }
+
+    private Servlet loadServlet() throws ServletException {
+        if (instance != null) {
+            return instance;
+        }
+        Servlet servlet = null;
+        String actualClass = servletClass;
+        if (actualClass == null) {
+            throw new ServletException("servlet class has not been specified");
+        }
+        Loader loader = getLoader();
+        //Acquire an instance of the class loader to be used
+        if (loader == null) {
+            throw new ServletException("No loader");
+        }
+
+        ClassLoader classLoader = loader.getClassLoader();
+
+        //Load the specified servlet class from the appropriate class loader
+        Class classClass = null;
+
+        try {
+            if (classLoader != null) {
+                classClass = classLoader.loadClass(actualClass);
+            }
+        } catch (ClassNotFoundException e) {
+            throw new ServletException("Servlet class not found");
+        }
+        try {
+            servlet = (Servlet) classClass.newInstance();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        try {
+            servlet.init(null);
+        } catch (Throwable f) {
+            throw new ServletException("Failed initialize servlet");
+        }
+        return servlet;
+    }
+
+    public Loader getLoader() {
+
+        if (loader != null){
+            return (loader);
+        }
+
+        if (parent != null) {
+            return parent.getLoader();
+        }
+        return null;
+    }
+
     public Valve getBasic() {
         return null;
     }
@@ -82,7 +161,7 @@ public class SimpleWrapper implements Wrapper,Pipeline {
     }
 
     public void setServletClass(String servletClass) {
-            this.servletClass = servletClass;
+        this.servletClass = servletClass;
     }
 
     public boolean isUnavailable() {
@@ -101,61 +180,6 @@ public class SimpleWrapper implements Wrapper,Pipeline {
 
     }
 
-    public Servlet allocate() throws ServletException {
-        //Load and initialize our instance if necessary
-        if(instance == null){
-            try {
-                instance = loadServlet();
-            }
-            catch (ServletException e) {
-                throw e;
-            }catch (Throwable e){
-                throw new ServletException("Cannot allocate a servlet instance ",e);
-            }
-        }
-        return instance;
-    }
-    private Servlet loadServlet() throws ServletException{
-        if(instance != null){
-            return instance;
-        }
-        Servlet servlet = null;
-        String actualClass = servletClass;
-        if(actualClass == null){
-            throw new ServletException("servlet class has not been specified");
-        }
-        Loader loader = getLoader();
-        //Acquire an instance of the class loader to be used
-        if(loader == null){
-            throw new ServletException("No loader");
-        }
-
-        ClassLoader classLoader = loader.getClassLoader();
-
-        //Load the specified servlet class from the appropriate class loader
-        Class classClass = null;
-
-        try {
-            if(classLoader != null) {
-                classClass = classLoader.loadClass(actualClass);
-            }
-        } catch (ClassNotFoundException e) {
-            throw new ServletException("Servlet class not found");
-        }
-        try {
-            servlet = (Servlet) classClass.newInstance();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }
-        try{
-            servlet.init(null);
-        }catch (Throwable f){
-            throw new ServletException("Failed initialize servlet");
-        }
-        return servlet;
-    }
 
     public void deallocate(Servlet servlet) throws ServletException {
 
@@ -205,14 +229,7 @@ public class SimpleWrapper implements Wrapper,Pipeline {
         return null;
     }
 
-    public Loader getLoader() {
-        if(loader != null)
-            return (loader);
-        if(parent != null){
-            return parent.getLoader();
-        }
-        return null;
-    }
+
 
     public void setLoader(Loader loader) {
         this.loader = loader;
@@ -266,6 +283,7 @@ public class SimpleWrapper implements Wrapper,Pipeline {
     public void setRealm(Realm realm) {
 
     }
+
     public Container getParent() {
         return parent;
     }
@@ -273,6 +291,7 @@ public class SimpleWrapper implements Wrapper,Pipeline {
     public void setParent(Container container) {
         parent = container;
     }
+
     public DirContext getResources() {
         return null;
     }
@@ -318,7 +337,7 @@ public class SimpleWrapper implements Wrapper,Pipeline {
     }
 
     public void invoke(Request request, Response response) throws IOException, ServletException {
-            pipeline.invoke(request,response);
+        pipeline.invoke(request, response);
     }
 
     public Container map(Request request, boolean update) {

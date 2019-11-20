@@ -74,12 +74,12 @@ import javax.servlet.ServletException;
  * in sequence when the <code>invoke()</code> method is invoked.  It is
  * required that a Valve somewhere in the pipeline (usually the last one)
  * must process the request and create the corresponding response, rather
- * than trying to pass the request on.</p>
+ * than (而不是) trying to pass the request on.</p>
  *
  * <p>There is generally a single Pipeline instance associated with each
  * Container.  The container's normal request processing functionality is
- * generally encapsulated in a container-specific Valve, which should always
- * be executed at the end of a pipeline.  To facilitate this, the
+ * generally encapsulated（封装） in a container-specific Valve, which should always
+ * be executed at the end of a pipeline.  To facilitate（促进） this, the
  * <code>setBasic()</code> method is provided to set the Valve instance that
  * will always be executed last.  Other Valves will be executed in the order
  * that they were added, before the basic Valve is executed.</p>

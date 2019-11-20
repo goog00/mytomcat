@@ -12,16 +12,17 @@ import java.io.IOException;
 import java.util.HashMap;
 
 /**
- * Created by ST on 2016/12/26.
+ * @author  by ST on 2016/12/26.
  */
-public class SimpleContext implements Context,Pipeline {
+public class SimpleContext implements Context, Pipeline {
 
-    public SimpleContext(){
+    protected HashMap children = new HashMap();
+
+    public SimpleContext() {
         //设置基础阀
         pipeline.setBasic(new SimpleContextValve());
     }
 
-    protected HashMap children = new HashMap();
     protected Loader loader = null;
     protected SimplePipeline pipeline = new SimplePipeline(this);
     protected HashMap servletMappings = new HashMap();
@@ -30,6 +31,86 @@ public class SimpleContext implements Context,Pipeline {
     private Container parent = null;
     private Logger logger = null;
 
+
+
+    public void addChild(Container child) {
+        child.setParent((Container) this);
+        children.put(child.getName(), child);
+    }
+    /**
+     * 在主容器中设置映射器
+     *
+     * @param mapper The corresponding Mapper implementation
+     */
+    public void addMapper(Mapper mapper) {
+        //this method is adopted from addMapper in ContainerBase
+        //the first mapper added becomes the default mapper
+        mapper.setContainer((Container) this);
+        this.mapper = mapper;
+        synchronized (mappers) {
+            if (mappers.get(mapper.getProtocol()) != null) {
+                throw new IllegalArgumentException("addMapper: Protocol '" + mapper.getProtocol() + "' is not unique");
+            }
+            mapper.setContainer((Container) this);
+            mappers.put(mapper.getProtocol(), mapper);
+            if (mappers.size() == 1) {
+                this.mapper = mapper;
+            } else {
+                this.mapper = null;
+            }
+        }
+    }
+
+
+
+    public Container findChild(String name) {
+        if (name == null){
+            return null;
+        }
+
+        synchronized (children) {
+            return (Container) children.get(name);
+        }
+    }
+
+    public Container[] findChildren() {
+        synchronized (children) {
+            Container[] results = new Container[children.size()];
+            return (Container[]) children.values().toArray(results);
+        }
+    }
+
+    public ContainerListener[] findContainerListeners() {
+        return new ContainerListener[0];
+    }
+
+    public Mapper findMapper(String protocol) {
+        if (mapper != null){
+            return (mapper);
+        }
+        else{
+            synchronized (mapper) {
+                return (Mapper) mappers.get(protocol);
+            }
+        }
+
+    }
+    public void invoke(Request request, Response response) throws IOException, ServletException {
+        pipeline.invoke(request, response);
+    }
+
+    public Container map(Request request, boolean update) {
+        //this method is token from the map method in org.apache.cataline.core.ContainerBase
+        // the findMapper method always returns the default mapper ,if any,regardless the
+        //request's protocol
+        Mapper mapper = findMapper(request.getRequest().getProtocol());
+        if (mapper == null){
+            return null;
+        }
+
+        //Use this mapper to perform this mapping
+        return (mapper.map(request, update));
+    }
 
 
     public Object[] getApplicationListeners() {
@@ -249,8 +330,8 @@ public class SimpleContext implements Context,Pipeline {
     }
 
     public void addServletMapping(String pattern, String name) {
-        synchronized (servletMappings){
-            servletMappings.put(pattern,name);
+        synchronized (servletMappings) {
+            servletMappings.put(pattern, name);
         }
     }
 
@@ -391,7 +472,7 @@ public class SimpleContext implements Context,Pipeline {
     }
 
     public String findServletMapping(String pattern) {
-        synchronized (servletMappings){
+        synchronized (servletMappings) {
             return (String) servletMappings.get(pattern);
         }
 
@@ -530,10 +611,10 @@ public class SimpleContext implements Context,Pipeline {
     }
 
     public Loader getLoader() {
-        if(loader != null){
+        if (loader != null) {
             return (loader);
         }
-        if(parent != null){
+        if (parent != null) {
             return parent.getLoader();
         }
         return null;
@@ -607,71 +688,16 @@ public class SimpleContext implements Context,Pipeline {
 
     }
 
-    public void addChild(Container child) {
-        child.setParent((Container) this);
-        children.put(child.getName(),child);
-    }
+
 
     public void addContainerListener(ContainerListener listener) {
 
     }
 
-    /**
-     * 在主容器中设置映射器
-     * @param mapper The corresponding Mapper implementation
-     *
-     */
-    public void addMapper(Mapper mapper) {
-        //this method is adopted from addMapper in ContainerBase
-        //the first mapper added becomes the default mapper
-        mapper.setContainer((Container) this);
-        this.mapper = mapper;
-        synchronized (mappers){
-            if(mappers.get(mapper.getProtocol()) != null){
-                throw new IllegalArgumentException("addMapper: Protocol '" + mapper.getProtocol() + "' is not unique");
-            }
-            mapper.setContainer((Container) this);
-            mappers.put(mapper.getProtocol(),mapper);
-            if(mappers.size() == 1){
-                this.mapper = mapper;
-            } else {
-                this.mapper = null;
-            }
-        }
-    }
 
     public void addPropertyChangeListener(PropertyChangeListener listener) {
 
     }
-
-    public Container findChild(String name) {
-        if(name == null)
-            return null;
-        synchronized (children){
-            return (Container) children.get(name);
-        }
-    }
-
-    public Container[] findChildren() {
-        synchronized (children){
-            Container results[] = new Container[children.size()];
-            return (Container[]) children.values().toArray(results);
-        }
-    }
-
-    public ContainerListener[] findContainerListeners() {
-        return new ContainerListener[0];
-    }
-
-    public Mapper findMapper(String protocol) {
-        if(mapper != null)
-            return (mapper);
-        else
-        synchronized (mapper){
-            return (Mapper) mappers.get(protocol);
-        }
-    }
-
     public Mapper[] findMappers() {
         return new Mapper[0];
     }
@@ -691,23 +717,11 @@ public class SimpleContext implements Context,Pipeline {
     public Valve[] getValves() {
         return pipeline.getValves();
     }
+
     public void removeValve(Valve valve) {
         pipeline.removeValve(valve);
     }
-    public void invoke(Request request, Response response) throws IOException, ServletException {
-        pipeline.invoke(request,response);
-    }
 
-    public Container map(Request request, boolean update) {
-        //this method is token from the map method in org.apache.cataline.core.ContainerBase
-        // the findMapper method always returns the default mapper ,if any,regardless the
-        //request's protocol
-        Mapper mapper = findMapper(request.getRequest().getProtocol());
-        if(mapper == null)
-            return null;
-        //Use this mapper to perform this mapping
-        return (mapper.map(request,update));
-    }
 
     public void removeChild(Container child) {
 

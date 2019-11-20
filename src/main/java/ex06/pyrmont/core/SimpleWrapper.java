@@ -1,6 +1,5 @@
 package ex06.pyrmont.core;
 
-import javafx.css.StyleableObjectProperty;
 import org.apache.catalina.*;
 import org.apache.catalina.util.LifecycleSupport;
 

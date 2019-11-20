@@ -34,23 +34,28 @@ public class Bootstrap2 {
         Wrapper wrapper2 = new SimpleWrapper();
         wrapper2.setName("Modern");
         wrapper2.setServletClass("ModernServlet");
+
         //context container include wrapper child container
         Context context = new SimpleContext();
         // wrapper container is added to father container context
         context.addChild(wrapper1);
         context.addChild(wrapper2);
+
         // create the custom valve(阀）
         Valve valve1 = new HeaderLoggerValve();
         Valve valve2 = new ClientIPLoggerValve();
         // add into context(Pipeline)
         ((Pipeline)context).addValve(valve1);
         ((Pipeline)context).addValve(valve2);
-        //
+
+        //servlet 映射器
         Mapper mapper = new SimpleContextMapper();
         mapper.setProtocol("http");
+        //把映射器添加到容器中
         context.addMapper(mapper);
         Loader loader = new SimpleLoader();
         context.setLoader(loader);
+        //将servlet配置到容器中（类似在web.xml中配置的servlet，读取到容器中去）
         context.addServletMapping("/Primitive","Primitive");
         context.addServletMapping("/Modern","Modern");
         // ------ add logger --------
@@ -67,6 +72,7 @@ public class Bootstrap2 {
         connector.setContainer(context);
 
         try {
+            //
             connector.initialize();
             connector.start();
 

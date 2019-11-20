@@ -15,7 +15,7 @@ import java.net.URLClassLoader;
 import java.net.URLStreamHandler;
 
 /**
- * Created by ST on 2016/12/24.
+ * @author by ST on 2016/12/24.
  */
 public class SimpleContainer implements Container{
 
@@ -25,6 +25,43 @@ public class SimpleContainer implements Container{
     public SimpleContainer(){
 
     }
+
+    public void invoke(Request request, Response response) throws IOException, ServletException {
+        String servletName = ((HttpServletRequest)request).getRequestURI();
+        servletName = servletName.substring(servletName.lastIndexOf("/") + 1);
+        URLClassLoader loader = null;
+
+        try{
+            URL[] urls = new URL[1];
+            URLStreamHandler streamHandler = null;
+            File classPath = new File(WEB_ROOT);
+            String repository = (new URL("file",null,classPath.getCanonicalPath() + File.separator)).toString();
+            urls[0] = new URL(null,repository,streamHandler);
+            loader = new URLClassLoader(urls);
+        }catch (IOException e){
+            System.out.print(e.toString());
+        }
+        Class myClass = null;
+        try {
+            myClass = loader.loadClass(servletName);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        Servlet servlet = null;
+
+        try {
+            servlet = (Servlet) myClass.newInstance();
+            servlet.service((HttpServletRequest)request,(HttpServletResponse)response);
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+
     public String getInfo() {
         return null;
     }
@@ -137,40 +174,6 @@ public class SimpleContainer implements Container{
         return new Mapper[0];
     }
 
-    public void invoke(Request request, Response response) throws IOException, ServletException {
-        String servletName = ((HttpServletRequest)request).getRequestURI();
-        servletName = servletName.substring(servletName.lastIndexOf("/") + 1);
-        URLClassLoader loader = null;
-
-        try{
-            URL[] urls = new URL[1];
-            URLStreamHandler streamHandler = null;
-            File classPath = new File(WEB_ROOT);
-            String repository = (new URL("file",null,classPath.getCanonicalPath() + File.separator)).toString();
-            urls[0] = new URL(null,repository,streamHandler);
-            loader = new URLClassLoader(urls);
-        }catch (IOException e){
-            System.out.print(e.toString());
-        }
-        Class myClass = null;
-        try {
-            myClass = loader.loadClass(servletName);
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        Servlet servlet = null;
-
-        try {
-            servlet = (Servlet) myClass.newInstance();
-            servlet.service((HttpServletRequest)request,(HttpServletResponse)response);
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }
-
-
-    }
 
     public Container map(Request request, boolean update) {
         return null;

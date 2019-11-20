@@ -29,10 +29,7 @@ public class HttpServer {
 
     private boolean shutdown = false;
 
-    public static void main(String[] args){
-        HttpServer server = new HttpServer();
-        server.await();
-    }
+
 
     public void await(){
 
@@ -77,6 +74,11 @@ public class HttpServer {
         }
     }
 
+
+    public static void main(String[] args){
+        HttpServer server = new HttpServer();
+        server.await();
+    }
 
 
 

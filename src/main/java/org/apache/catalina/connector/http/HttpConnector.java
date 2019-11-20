@@ -142,7 +142,7 @@ public final class HttpConnector
     /**
      * The port number on which we listen for HTTP requests.
      */
-    private int port = 8080;
+    private int port = 8087;
 
 
     /**
@@ -1101,11 +1101,9 @@ public final class HttpConnector
     /**
      * Initialize this connector (create ServerSocket here!)
      */
-    public void initialize()
-    throws LifecycleException {
+    public void initialize() throws LifecycleException {
         if (initialized)
-            throw new LifecycleException (
-                sm.getString("httpConnector.alreadyInitialized"));
+            throw new LifecycleException (sm.getString("httpConnector.alreadyInitialized"));
 
         this.initialized=true;
         Exception eRethrow = null;
@@ -1139,6 +1137,7 @@ public final class HttpConnector
     }
 
 
+
     /**
      * Begin processing requests via this Connector.
      *
@@ -1149,7 +1148,7 @@ public final class HttpConnector
         // Validate and update our current state
         if (started)
             throw new LifecycleException
-                (sm.getString("httpConnector.alreadyStarted"));
+                    (sm.getString("httpConnector.alreadyStarted"));
         threadName = "HttpConnector[" + port + "]";
         lifecycle.fireLifecycleEvent(START_EVENT, null);
         started = true;
@@ -1166,7 +1165,6 @@ public final class HttpConnector
         }
 
     }
-
 
     /**
      * Terminate processing requests via this Connector.
