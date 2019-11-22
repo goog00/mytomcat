@@ -15,7 +15,10 @@ import java.io.IOException;
  */
 public class SimpleWrapper implements Wrapper,Pipeline,Lifecycle {
 
-    //the servlet instance
+
+    /**
+     * the servlet instance
+     */
     private Servlet instance = null;
     private String servletClass;
     private Loader loader;
@@ -358,7 +361,7 @@ public class SimpleWrapper implements Wrapper,Pipeline,Lifecycle {
     }
 
     public void start() throws LifecycleException {
-        System.out.println("Starting Wrapper" + name);
+        System.out.println("Starting Wrapper " + name);
         if(started){
             throw new LifecycleException("Wrapper already stared");
         }

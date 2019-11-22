@@ -10,7 +10,7 @@ import java.net.URLClassLoader;
 import java.net.URLStreamHandler;
 
 /**
- * Created by ST on 2016/12/26.
+ * @author  by ST on 2016/12/26.
  */
 public class SimpleLoader implements Loader ,Lifecycle {
     public static final String WEB_ROOT =

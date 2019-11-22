@@ -111,7 +111,7 @@ public final class LifecycleSupport {
     /**
      * The set of registered LifecycleListeners for event notifications.
      */
-    private LifecycleListener listeners[] = new LifecycleListener[0];
+    private LifecycleListener[] listeners = new LifecycleListener[0];
 
 
     // --------------------------------------------------------- Public Methods
@@ -125,10 +125,10 @@ public final class LifecycleSupport {
     public void addLifecycleListener(LifecycleListener listener) {
 
       synchronized (listeners) {
-          LifecycleListener results[] =
-            new LifecycleListener[listeners.length + 1];
-          for (int i = 0; i < listeners.length; i++)
+          LifecycleListener[] results = new LifecycleListener[listeners.length + 1];
+          for (int i = 0; i < listeners.length; i++){
               results[i] = listeners[i];
+          }
           results[listeners.length] = listener;
           listeners = results;
       }
@@ -158,12 +158,14 @@ public final class LifecycleSupport {
     public void fireLifecycleEvent(String type, Object data) {
 
         LifecycleEvent event = new LifecycleEvent(lifecycle, type, data);
-        LifecycleListener interested[] = null;
+        LifecycleListener[] interested = null;
         synchronized (listeners) {
-            interested = (LifecycleListener[]) listeners.clone();
+            interested =  listeners.clone();
         }
-        for (int i = 0; i < interested.length; i++)
+        for (int i = 0; i < interested.length; i++){
             interested[i].lifecycleEvent(event);
+        }
+
 
     }
 

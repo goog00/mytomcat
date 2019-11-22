@@ -25,10 +25,16 @@ public class Bootstrap {
         //映射器
         Mapper mapper = new SimpleContextMapper();
         mapper.setProtocol("http");
-        //
-        LifecycleListener listener = new SimpleContextLifecycleListener();
-        ((Lifecycle)context).addLifecycleListener(listener);
         context.addMapper(mapper);
+
+
+        //观察者
+        LifecycleListener listener = new SimpleContextLifecycleListener();
+        //把观察者注册到目标对象中
+        ((Lifecycle)context).addLifecycleListener(listener);
+
+
+
         Loader loader = new SimpleLoader();
         context.setLoader(loader);
         context.addServletMapping("/Primitive","Primitive");

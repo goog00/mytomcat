@@ -6,19 +6,30 @@ import javax.servlet.ServletException;
 import java.io.IOException;
 
 /**
- * Created by ST on 2016/12/26.
+ * @author  by ST on 2016/12/26.
  */
 public class SimplePipeline implements Pipeline,Lifecycle{
-    //设置容器
+
+    /**
+     * 设置容器
+     * @param container
+     */
     public SimplePipeline(Container container){
         setContainer(container);
     }
 
-    //The basic Valve (if any) associated with this Pipeline
+
+    /**
+     * The basic Valve (if any) associated with this Pipeline
+     */
     protected  Valve basic = null;
-    //the Container with which this Pipeline is associated
+
+    /**
+     * the Container with which this Pipeline is associated
+     */
     protected Container container = null;
-    protected Valve valves[] = new Valve[0];
+
+    protected Valve[] valves = new Valve[0];
 
     public void setContainer(Container container){
         this.container = container;
@@ -36,11 +47,13 @@ public class SimplePipeline implements Pipeline,Lifecycle{
     }
 
     public void addValve(Valve valve) {
-        if(valve instanceof Contained)
+        if(valve instanceof Contained){
             ((Contained)valve).setContainer(this.container);
+        }
+
 
         synchronized (valves){
-            Valve results[] = new Valve[valves.length + 1];
+            Valve[] results = new Valve[valves.length + 1];
             System.arraycopy(valves,0,results,0,valves.length);
             results[valves.length] = valve;
             valves = results;
@@ -61,7 +74,11 @@ public class SimplePipeline implements Pipeline,Lifecycle{
 
     }
 
-    //implementation of the Lifecycle's method
+
+    /**
+     * implementation of the Lifecycle's method
+     * @param listener The listener to add
+     */
     public void addLifecycleListener(LifecycleListener listener) {
 
     }
